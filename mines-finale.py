@@ -8,7 +8,44 @@ import re
 import json
 import random
 
-# ... (Other functions like find_element_by_attribute, click_tile, etc.) ...
+# --- Helper Functions ---
+
+def find_element_by_attribute(attribute, attribute_value, element_type):
+    """Finds an element by its attribute (ID, class, name) and falls back to XPath/CSS selector."""
+    try:
+        if element_type == "ID":
+            element = driver.find_element(By.ID, attribute_value)
+        elif element_type == "CLASS":
+            element = driver.find_element(By.CLASS_NAME, attribute_value)
+        elif element_type == "NAME":
+            element = driver.find_element(By.NAME, attribute_value)
+        else:
+            return None
+        return element
+    except NoSuchElementException:
+        return find_element_by_xpath_or_css(attribute_value)
+
+def find_element_by_xpath_or_css(element_identifier):
+    """Finds an element using XPath or CSS selector as a fallback."""
+    try:
+        element = driver.find_element(By.XPATH, element_identifier)
+        return element
+    except NoSuchElementException:
+        try:
+            element = driver.find_element(By.CSS_SELECTOR, element_identifier)
+            return element
+        except NoSuchElementException:
+            return None
+
+def wait_for_element(locator, by, timeout=10):
+    """Waits for an element to be visible on the page."""
+    try:
+        element = WebDriverWait(driver, timeout).until(
+            EC.visibility_of_element_located((by, locator))
+        )
+        return element
+    except TimeoutException:
+        return None
 
 def analyze_javascript(driver):
     """Analyzes the game's JavaScript code for mine locations (using BeautifulSoup)."""
