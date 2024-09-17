@@ -55,8 +55,12 @@ def analyze_javascript(driver):
     for script in script_tags:
         if "tileData" in script.text:
             js_code = script.text
-            # Extract tile data using BeautifulSoup (more robust than regex)
-            # ... (Parse js_code using BeautifulSoup to extract tile data) ...
+            # Parse js_code using BeautifulSoup to extract tile data
+            soup_js = BeautifulSoup(js_code, 'html.parser')
+            # Assuming tileData is within a script tag and has a specific format
+            tile_data_str = soup_js.find(text=re.compile(r"var tileData = \[.*?\];")).strip()
+            # Extract the numbers from the string (adjust based on the actual format)
+            tile_data = [int(x) for x in re.findall(r'\d+', tile_data_str) if 'mine' in tile_data_str]
             return tile_data
     return []
 
