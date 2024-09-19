@@ -37,7 +37,7 @@ def find_element_by_xpath_or_css(element_identifier):
         except NoSuchElementException:
             return None
 
-def wait_for_element(locator, by, timeout=10):
+def wait_for_element(locator, by, timeout=30):
     """Waits for an element to be visible on the page."""
     try:
         element = WebDriverWait(driver, timeout).until(
@@ -100,7 +100,7 @@ def get_safe_tiles(driver):
 
 def play_game(driver):
     """Plays the game by selecting tiles and waiting for cash-out."""
-    max_tiles = 10  # Replace with the maximum number of tiles allowed
+    max_tiles = 7  # Replace with the maximum number of tiles allowed
     tiles_clicked = 0
     clicked_tiles = []  # Keep track of clicked tiles
 
